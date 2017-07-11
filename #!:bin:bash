@@ -1,0 +1,51 @@
+#!/bin/bash
+
+uso(){
+echo "#
+Programa para reportar la cantidad de  horas y cores utilizados en el cluster YOLTLA
+
+
+Usar yoltla-reporte [ -d # de  días ] [ -h | --help ] 
+
+-d              Inidica el número de días a consultar en la base de datos del cluster. 
+
+-h|--help       Muestra esta ayuda 
+
+Para solicitar el número de horas utilizdos desde hace 30 días ejecutar
+
+yoltla-reporte -d 30 
+
+Sin opciones se reportan solamente los últimos 3 días 
+"
+
+exit 1
+}
+
+COMPLETO="-X  --format=JobName%35,start,Partition,elapsed,NCPUS,NNodes,CPUTime"
+echo "cuantos dias del reporte:"
+read DIAS
+
+echo "nombre del usuario:"
+read USUARIO
+
+
+let DIAS++
+[ $? -ne 0 ] && uso
+let DIAS--
+
+#verificar el nombre usuario /etc/passwd  
+#reconocer siguienes opciones
+# -d dias
+# -u usuario 
+# -m meses , pero hacer conversion a dias 
+
+#sacct -u $USR -S $(date --date="$DIAS days ago" +%F) -E $(date +%F) $OPTALL
+
+sacct -u $USUARIO  -S $(date --date="$DIAS days ago" +%F) -E $(date +%F) $COMPLETO | tac
+
+echo -n  "TOTAL HORAS: "
+sacct -u $USUARIO  -S $(date --date="$DIAS days ago" +%F) -E $(date +%F) -n -X --format=CPUTimeRAW | awk '{ x += $1 } END { print int(x/3600) }'
+
+echo -n  "TOTAL CORES: "
+sacct -u $USUARIO  -S $(date --date="$DIAS days ago" +%F) -E $(date +%F) -n -X --format=NCPUS | awk '{ x += $1 } END { print x }'
+echo "============"
