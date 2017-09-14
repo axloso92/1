@@ -1,0 +1,223 @@
+configuracion chacmool 
+configurar el archivo network en cd /etc/sysconfig/network y
+configurar el nombre de el host agregar la, 
+direccion ip externa ip interna e incluir las ip de los nodos esclabo con nombre y alias
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+148.206.50.91 chacmool.izt.uam.mx
+172.17.253.253 chacmool
+172.17.1.1 node01 node1 n1
+172.17.1.2 node02 node2 n2
+172.17.1.3 node03 node3 n3
+172.17.1.4 node04 node4 n4
+
+crear el archivo vim /etc/sudoers.d/lsvp y agregarle los parametros  soporte ALL=(ALL) ALL
+
+descargar el archivo ftp://ftp.supermicro.com/driver/SAS/LSI/Tools/MegaRAID_Storage_Manager/v16.11.00.03/v16.11.00.03.zip 
+descomprimirlo con umzip 
+
+descomprimir el tar con el comando tar -v -xf  MSM_linux_x64_installer-16.11.00-03.tar.gz (leer manuar de man tar o tar --help para que nos muestre las opciones)
+
+hacer vncserver y arrancar el servicio vnc 
+si faltan las paqueterias instalar yum groupinstall desktop para agregar el escritorio en modo grafico 
+
+y volver a arrancan vinagre (si no sabes arrancar lee el manual)
+
+ya estando denro de vnc vamos a ejecutar el programa mega RAID storage manager lo abrimos y hacemos la particon
+del disco seleccionamos la ip, nos va a pedir cuenta y contraseña, vamos a seleccionar logical y alli se va a hacer la, particion de la 
+raid 
+
+
+ya estando en vnc ejecutar el programa mega raid storage manager y crear el directorio home con el espacio sobrante 
+
+ahora hacer una particion de disco usando parted /dev/sda
+
+para partisionar la particion /dev/sdb creamos la particion /dev/sdb1
+
+utilizamos los comandos 
+
+mklabel gpt(solo aplica la primera vez)
+mkpart
+nombre de la particion (le damos enter)
+inicio? (esto se refiere a que con cuantos mb o gb inicia)
+fin? (con cual es la capacidad que va a terminar)
+
+consejo 
+para borrar aplicamos rm y el numero de la particion
+para  checar como esta la particion  la letra p
+
+este comando vamos a ocuparlo para darle formato al disco
+mkfs.xfs /dev/sda3
+
+
+lsblk -o uuid,name 
+este comando lo utilizamos para sacar el id de el disco que posteriormente lo agregaremos en mkfs.xfs /dev/sda3
+lsblk -o uuid,name
+UUID                                 NAME
+                                     sda
+76df336e-bcf6-423c-9702-87b8c3d2f91f ├─sda1
+c746a637-a0e3-445f-b1ce-0d2803a378a5 ├─sda2
+9f6038a9-14fd-48a5-b868-f7c535111810 └─sda3
+                                     sdb
+df7c71b0-eab3-42f7-b689-017239593631 └─sdb1
+
+
+  
+  este comando nos muestra como esta el sistema de montaje
+  vi /etc/fstab
+  
+  nos sirve para montar el disco
+  mount -av
+  
+  
+ vi /etc/sudoers.d/lsvp
+aqui podemos agregar los nombres de usuario de las cuentas de el servidor 
+
+  
+  1  history 
+    2  cat /etc/sysconfig/network
+    3  cat /etc/sudoers.d/lsvp
+    4  vim /etc/sysconfig/network
+    5  cat /etc/sudoers.d/lsvp
+    6  vim /etc/sudoers.d/lsvp
+    7  man tar
+    8  tar --help
+    9  ls
+   10  ./install.csh -a
+   11  cd disk/
+   12  ls
+   13  ./install.csh -a
+   14  vncserver
+   15  vncserver -kill :1
+   16  cd
+   17  ls -a
+   18  cd .vnc/
+   19  ls
+   20  vim xstartup 
+   21  yum grouplist
+   22  yum group install desktop
+   23  yum groupinstall desktop
+   24  vncserver 
+   25  vncserver -kill :1
+   26  man vncserver 
+   27  vncserver -geometry 1024x768
+   28  cd /etc/sysconfig/
+   29  ls
+   30  vim /network
+   31  cd
+   32  cat /etc/sysconfig/network
+   33  vim /etc/sysconfig/network
+   34  vim /etc/sudoers.d/lsvp
+   35  vim /etc/hosts/
+   36  vim /etc/hosts
+   37  cat /etc/sysconfig/
+   38  cat /etc/sysconfig/network
+   39  vim /etc/sysconfig/network
+   40  hostname
+   41  hostname chacmool
+   42  hostname 
+   43  wget ftp://ftp.supermicro.com/driver/SAS/LSI/Tools/MegaRAID_Storage_Manager/v16.11.00.03/v16.11.00.03.zip
+   44    cat /etc/sudoers.d/lsvp
+   45  cat /etc/hosts/
+   46  vim /etc/hosts/
+   47  cat /etc/sysconfig/network
+   48  vim /etc/hosts
+   49  unzip v16.11.00.03.zip 
+   50  unzip Linux-x64.zip
+   51  unzip MSM_Linux-x64.zip 
+   52  man tar
+   53  MSM_linux_x64_installer-16.11.00-03.tar.gz-tar -x
+   54  man tar
+   55  tar -x MSM_linux_x64_installer-16.11.00-03.tar.gz
+   56  tar -xf MSM_linux_x64_installer-16.11.00-03.tar.gz
+   57  ls
+   58  tar -v -xf  MSM_linux_x64_installer-16.11.00-03.tar.gz
+   59  ls
+   60  cd disk/
+   61  ls
+   62  cat readme.txt 
+   63  useradd soporte
+   64  passwd soporte 
+   65  grep -i invalid /var/log/secure 
+   66  grep -i failed /var/log/secure 
+   67  ls
+   68  nano ~/.bashrc
+   69  lsblk 
+   70  rm /dev/sdb1
+   71  lsblk lsblk -o uuid,name
+   72  print
+   73  print /dev/sdb
+   74  lsblk 
+   75  parted /dev/sdb
+   76  lsblk vi /etc/sudoers.d/lsvp
+   77  print devices 
+   78  lsblk 
+   79  parted /dev/sdb 
+   80  lsblk 
+   81  rm sdb1
+   82  parted /dev/sdb
+   83  lsblk 
+   84  parted /dev/sdb
+   85  yum update
+   86  lsblk 
+   87  parted /dev/sdb
+   88  lsblk 
+   89  rm /dev/sdb1 
+   90  lsblk 
+   91  parted /dev/sdb
+   92  lsblk 
+   93  parted /dev/sdb 
+   94  rm /dev/sdb1 
+   95  parted /dev/sdb 
+   96  lsblk 
+   97  parted /dev/sdb 
+   98  lsblk 
+   99  parted /dev/sdb 
+  100  rm /dev/sdb1 
+  101  parted /dev/sdb 
+  102  lsblk 
+  103  parted /dev/sdb 
+  104  lsblk 
+  105* 
+  106  ls /home/
+  107  lsblk -o uuid,name
+  108  vi /etc/fstab 
+  109  mount -av
+  110  vi /etc/fstab 
+  111  mount -av
+  112  df -h
+  113  htop
+  114  tmux
+  115  w
+  116  gcc
+  117  ifconfig 
+  118  df -h
+  119  lsblk 
+  120  parted /dev/sda
+  121  reboot 
+  122  ls
+  123  lsblk 
+  124  df -h
+  125  mount -av
+  126  vi /etc/fstab 
+  127  lsblk -o uuid,name
+  128  mkfs.xfs /dev/sda3
+  129  lsblk -o uuid,name
+  130  vi /etc/fstab 
+  131  mount -av
+  132  lsklb
+  133  lsblk 
+  134  userdel soporte
+  135  useradd soporte
+  136  passwd soporte
+  137  useradd pdcs
+  138  passwd pdcs
+  139  vi /etc/sudoers.d/lsvp 
+  140  yum update
+  141  free
+  142  ifconfig 
+  143  df -h
+  144  useradd axl
+  145  passwd axl
+  146  vi /etc/sudoers.d/lsvp 
+  147  history 
